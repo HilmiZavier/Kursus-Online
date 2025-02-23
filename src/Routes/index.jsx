@@ -6,8 +6,30 @@ import Login from "../components/login";
 import Register from "../components/register";
 import Profile from "../components/profile";
 import Materi from "../components/materi";
+import Absensi from "../components/absensi";
 
-const route = createBrowserRouter([
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/materi/:courseId",
+        element: <Materi />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/absensi",
+        element: <Absensi />,
+      },
+    ],
+  },
   {
     path: "/",
     element: <Home />,
@@ -20,25 +42,6 @@ const route = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
-
-  {
-    path: "/dashboard",
-    element: <Layout />,
-    children: [
-      {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "/dashboard/materi",
-        element: <Materi />,
-      },
-      {
-        path: "/dashboard/profile",
-        element: <Profile />,
-      },
-    ],
-  },
 ]);
 
-export default route;
+export default router;

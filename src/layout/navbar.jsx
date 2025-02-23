@@ -1,84 +1,112 @@
-import  { useState } from 'react';
-import { BookOpen, CheckSquare, Layout, LogIn, UserPlus, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import {  Layout as LayoutIcon, Menu, X, User, LogOut } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const navigate = useNavigate();
 
   const menuItems = [
-    { text: 'Register', icon: <UserPlus className="w-5 h-5" />, href: '/register', variant: 'ghost' },
-    { text: 'Login', icon: <LogIn className="w-5 h-5" />, href: '/login', variant: 'primary' },
-    { text: 'Materi', icon: <BookOpen className="w-5 h-5" />, href: '/materi' },
-    { text: 'Absensi', icon: <CheckSquare className="w-5 h-5" />, href: '/absensi' },
-    { text: 'Dashboard', icon: <Layout className="w-5 h-5" />, href: '/dashboard' }
+    { text: 'Dashboard', icon: <LayoutIcon className="w-5 h-5" />, href: '/dashboard' },
+    
   ];
 
+  const handleLogout = () => {
+    // Lakukan proses logout di sini, seperti menghapus token dari localStorage
+    localStorage.removeItem('authToken'); // Contoh: menghapus token
+
+    // Arahkan pengguna ke halaman home
+    navigate('/');
+  };
+
   return (
-    <div className="w-full shadow-lg bg-base-100">
-      {/* Navbar */}
-      <div className="navbar max-w-7xl mx-auto px-4">
-        {/* Navbar Start - Logo & Mobile Menu */}
-        <div className="navbar-start">
-          <div className="dropdown">
-            <label 
-              tabIndex={0} 
-              className="btn btn-ghost lg:hidden"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </label>
-            {/* Mobile Menu */}
-            <ul tabIndex={0} className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 ${isOpen ? 'block' : 'hidden'}`}>
-              {menuItems.map((item, index) => (
-                <li key={index}>
-                  <a 
-                    href={item.href}
-                    className="flex items-center gap-2 py-2"
-                  >
-                    {item.icon}
-                    {item.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <a className="btn btn-ghost text-xl gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 14l9-5-9-5-9 5 9 5z" />
-              <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
-            </svg>
-            E-Learning
-          </a>
-        </div>
-
-        {/* Navbar Center - Desktop Menu */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-2">
-            {menuItems.slice(2).map((item, index) => (
-              <li key={index}>
-                <a 
-                  href={item.href}
-                  className="flex items-center gap-2 hover:bg-primary hover:text-primary-content"
+    <>
+      <div className="w-full shadow-lg bg-base-600 ">
+        <nav>
+          <div className="navbar max-w-7xl mx-auto px-4">
+            {/* Navbar Start - Logo & Mobile Menu */}
+            <div className="navbar-start">
+              <div className="dropdown">
+                <label 
+                  tabIndex={0} 
+                  className="btn btn-ghost lg:hidden"
+                  onClick={() => setIsOpen(!isOpen)}
                 >
-                  {item.icon}
-                  {item.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </label>
+                {/* Mobile Menu */}
+                <ul tabIndex={0} className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 ${isOpen ? 'block' : 'hidden'}`}>
+                  {menuItems.map((item, index) => (
+                    <li key={index}>
+                      <Link 
+                        to={item.href}
+                        className="flex items-center gap-2 py-2"
+                      >
+                        {item.icon}
+                        {item.text}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Link to="/" className="btn btn-ghost text-xl gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                </svg>
+                E-Learning
+              </Link>
+            </div>
 
-        {/* Navbar End - Auth Buttons */}
-        <div className="navbar-end hidden lg:flex gap-2">
-          <a href="/register" className="btn btn-ghost gap-2">
-            <UserPlus className="w-5 h-5" />
-            Register
-          </a>
-          <a href="/login" className="btn btn-primary gap-2">
-            <LogIn className="w-5 h-5" />
-            Login
-          </a>
-        </div>
+            {/* Navbar Center - Desktop Menu */}
+            <div className="navbar-center hidden lg:flex">
+              <ul className="menu menu-horizontal px-1 gap-2">
+                {menuItems.map((item, index) => (
+                  <li key={index}>
+                    <Link 
+                      to={item.href}
+                      className="flex items-center gap-2 hover:bg-primary hover:text-primary-content"
+                    >
+                      {item.icon}
+                      {item.text}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Navbar End - Profile Avatar Dropdown */}
+            <div className="navbar-end">
+              <div className="dropdown dropdown-end">
+                <label 
+                  tabIndex={0} 
+                  className="btn btn-ghost btn-circle avatar"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                >
+                  <div className="w-10 rounded-full bg-primary">
+                    <User className="w-6 h-6 m-2 text-primary-content" />
+                  </div>
+                </label>
+                <ul tabIndex={0} className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52  ? 'block' : 'hidden'}`}>
+                  <li>
+                    <Link to="/profile" className="py-2">
+                      <User className="w-5 h-5" />
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <button onClick={handleLogout} className="py-2 text-error">
+                      <LogOut className="w-5 h-5" />
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </nav>
       </div>
 
       {/* Theme Toggle - Fixed Bottom Right */}
@@ -95,7 +123,12 @@ const Navbar = () => {
           </svg>
         </label>
       </div>
-    </div>
+
+      {/* Content Area */}
+      <main className="min-h-screen">
+        <Outlet />
+      </main>
+    </>
   );
 };
 

@@ -1,193 +1,172 @@
-import { Book, Users, Trophy, BellRing, Search, Menu } from "lucide-react";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  BarChart, 
+  BookOpen, 
+  Clock, 
+  Trophy,
+  ChevronRight
+} from "lucide-react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
-const Dashboard = () => {
-  // Data mata pelajaran SMP
-  const subjects = [
+const IntegratedDashboard = () => {
+  const navigate = useNavigate();
+  const [data, setdata] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://api-kursusonline.csnightdev.com/api/courses"
+        );
+        setdata(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Color schemes matching the material page
+  const colors = [
     {
-      id: 1,
-      title: "Matematika Kelas 7",
-      teacher: "Budi Santoso, S.Pd",
-      progress: 75,
-      thumbnail: "/api/placeholder/400/225",
-      category: "Matematika",
-      currentTopic: "Aljabar Dasar",
+      primary: 'bg-indigo-600',
+      secondary: 'bg-indigo-100',
+      accent: 'text-indigo-600',
+      gradient: 'from-indigo-600 to-blue-500',
+      light: 'bg-indigo-50',
+      border: 'border-indigo-300'
     },
     {
-      id: 2,
-      title: "IPA Kelas 7",
-      teacher: "Siti Rahayu, M.Pd",
-      progress: 45,
-      thumbnail: "/api/placeholder/400/225",
-      category: "IPA",
-      currentTopic: "Klasifikasi Makhluk Hidup",
-    },
-    {
-      id: 3,
-      title: "Bahasa Indonesia Kelas 7",
-      teacher: "Ahmad Hidayat, S.Pd",
-      progress: 90,
-      thumbnail: "/api/placeholder/400/225",
-      category: "Bahasa",
-      currentTopic: "Teks Deskriptif",
-    },
+      primary: 'bg-emerald-600',
+      secondary: 'bg-emerald-100',
+      accent: 'text-emerald-600',
+      gradient: 'from-emerald-600 to-teal-500',
+      light: 'bg-emerald-50',
+      border: 'border-emerald-300'
+    }
   ];
 
-  // Data statistik pembelajaran
-  const stats = [
-    { title: "Total Mata Pelajaran", value: "12", icon: Book },
-    { title: "Jumlah Siswa", value: "280", icon: Users },
-    { title: "Nilai Sempurna", value: "8", icon: Trophy },
+  const studentStats = [
+    { title: "Rata-rata Nilai", value: "82", icon: BarChart },
+    { title: "Materi Selesai", value: "24", icon: BookOpen },
+    { title: "Total Jam Belajar", value: "48", icon: Clock },
+    { title: "Peringkat Kelas", value: "5", icon: Trophy }
   ];
+
+  const handleCourseClick = (courseId) => {
+    navigate(`/materi/${courseId}`);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
-      <nav className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <label className="btn btn-circle swap swap-rotate">
-                {/* this hidden checkbox controls the state */}
-                <input type="checkbox" />
-
-                {/* hamburger icon */}
-                <svg
-                  class="swap-off fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 512 512"
-                >
-                  <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
-                </svg>
-
-                {/* close icon */}
-                <svg
-                  class="swap-on fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 512 512"
-                >
-                  <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
-                </svg>
-              </label>
-              <span className="text-xl font-bold text-primary">
-                Belajar SMP
-              </span>
+    <div className="min-h-screen bg-gradient-to-br bg-blue-100 bg-gray-100">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header Section */}
+        <div className="bg-indigo-600 rounded-2xl shadow-sm p-4 sm:p-6 mb-8 border-t-4 border-l-4 border-r-0 border-b-0 border-indigo-600 border-opacity-70">
+          <div className="flex flex-col sm:flex-row items-center justify-between">
+            <div className="text-center sm:text-left">
+              <h1 className="text-xl sm:text-2xl font-bold text-white/90">
+                Selamat Datang 
+              </h1>
+              <p className="text-white/90 mt-1 text-sm sm:text-base">
+                Semester 1 - Tahun Ajaran 2024/2025
+              </p>
             </div>
-
-            {/* Search Bar */}
-            <div className="flex-1 max-w-xl mx-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Cari mata pelajaran..."
-                  className="w-full px-4 py-2 pl-10 pr-4 rounded-lg border border-gray-300 focus:outline-none focus:border-primary"
-                />
-                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-              </div>
-            </div>
-
-            {/* Notification */}
-            <div className="flex items-center gap-4">
-              <button className="relative p-2 text-gray-500 hover:text-primary">
-                <BellRing className="h-6 w-6" />
-                <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-              </button>
-              <div className="avatar avatar-placeholder">
-                <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                  <span className="text-xs">UI</span>
-                </div>
+            <div className="text-center sm:text-right mt-4 sm:mt-0">
+              <p className="text-sm text-white/90">Status Belajar</p>
+              <div className="flex items-center justify-center sm:justify-start mt-1">
+                <span className="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                <span className="font-medium text-white/90">Aktif</span>
               </div>
             </div>
           </div>
         </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Selamat Datang di Kelas 7!
-          </h1>
-          <p className="text-gray-600">
-            Mari belajar bersama untuk meningkatkan prestasi
-          </p>
-        </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {studentStats.map((stat, index) => (
+            <div key={index} className="bg-indigo-600 p-4 sm:p-6 rounded-2xl shadow-sm border-t-2 border-l-2 border-indigo-600 border-opacity-30">
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-primary/10 mr-4">
-                  <stat.icon className="h-6 w-6 text-primary" />
+                <div className="p-2 sm:p-3 rounded-xl bg-indigo-50 mr-4">
+                  <stat.icon className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">{stat.title}</p>
-                  <p className="text-2xl font-bold text-gray-800">
-                    {stat.value}
-                  </p>
+                  <p className="text-sm text-white/90">{stat.title}</p>
+                  <p className="text-lg sm:text-xl font-bold text-white/90">{stat.value}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Subjects Section */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gray-800">
-              Mata Pelajaran Aktif
-            </h2>
-            <button className="text-primary hover:underline">
-              Lihat Semua
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {subjects.map((subject) => (
-              <div
-                key={subject.id}
-                className="bg-white rounded-lg shadow-sm overflow-hidden"
-              >
-                <img
-                  src={subject.thumbnail}
-                  alt={subject.title}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <span className="text-sm text-primary bg-primary/10 px-2 py-1 rounded-full">
-                    {subject.category}
-                  </span>
-                  <h3 className="text-lg font-semibold mt-2 text-gray-800">
-                    {subject.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm mt-1">
-                    Guru: {subject.teacher}
-                  </p>
-                  <p className="text-gray-600 text-sm mt-1">
-                    Materi: {subject.currentTopic}
-                  </p>
-
-                  {/* Progress Bar */}
-                  <div className="mt-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>Progress Materi</span>
-                      <span>{subject.progress}%</span>
+        {/* Enrolled Courses Section */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 flex items-center">
+            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-indigo-600" />
+            Kursus Saya
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {data.map((course, index) => {
+              const colorScheme = colors[index % colors.length]; // Use color scheme
+              return (
+                <div
+                  key={course.id}
+                  className="group border rounded-2xl hover:shadow-md transition-all cursor-pointer overflow-hidden"
+                  onClick={() => handleCourseClick(course.id)} // Pass course.id
+                >
+                  <div className={`h-2 w-full bg-gradient-to-r ${colorScheme.gradient}`}></div>
+                  <div className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`text-sm ${colorScheme.accent} ${colorScheme.primary} px-2 sm:px-3 py-1 sm:py-1.5 rounded-full`}>
+                        {course.category}
+                      </span>
+                      <span className="text-sm text-gray-600 flex items-center">
+                        <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                        {course.nextClass}
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-primary rounded-full h-2"
-                        style={{ width: `${subject.progress}%` }}
-                      ></div>
+                    
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-xl ${colorScheme.secondary} flex items-center justify-center text-white text-lg sm:text-xl`}>
+                      <BookOpen color="#3e9392"/>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">
+                          {course.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-3 sm:mb-4">
+                          {course.teacher}
+                        </p>
+                        
+                        <div className="space-y-2 sm:space-y-3">
+                          <div className="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Progress</span>
+                            <span>{course.progress}%</span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                            <div
+                              className={`h-full ${colorScheme.primary}`}
+                              style={{ width: `${course.progress}%` }}
+                            ></div>
+                          </div>
+                          
+                          <div className="flex justify-between items-center">
+                            <div className="text-sm">
+                              <p className="text-gray-600">Nilai Quiz</p>
+                              <p className="text-base sm:text-lg font-bold text-gray-800">{course.quizScore}</p>
+                            </div>
+                            <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${colorScheme.primary} flex items-center justify-center group-hover:bg-white transition-colors`}>
+                              <ChevronRight className={`w-3 h-3 sm:w-4 sm:h-4 ${colorScheme.accent}`} />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </main>
@@ -195,4 +174,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default IntegratedDashboard;

@@ -6,26 +6,12 @@
 // import Profile from '../src/components/profile'
 // import Materi from '../src/components/materi'
 import { RouterProvider } from "react-router-dom";
-import route from "./Routes/index"
-import './App.css'
+import route from "./Routes/index"; 
+import "./App.css";
 
 const App = () => {
+  return <RouterProvider router={route} />;
+};
 
+export default App;
 
-  return (
-    <>
-    <RouterProvider router={route}/>
-    {/* <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} /> 
-        
-      </Routes>
-    </Router> */}
-     
-     
-    </>
-  )
-}
-
-export default App
